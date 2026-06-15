@@ -1,5 +1,7 @@
+import os
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from agent.crew import analyze_random_fact
 
 app = FastAPI()
 
@@ -44,3 +46,17 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+@app.get("/agent")
+async def run_agent():
+    try:
+        result = analyze_random_fact()
+        return {
+            "success": True,
+            "result": str(result)
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
